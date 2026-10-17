@@ -2,6 +2,9 @@
   "name": "ptlabel – Etikettenprogramm für Brother PT-P750W",
   "build": { "dockerfile": "Dockerfile" },
 
+  // Läuft auf dem Host: Ablage ~/Etiketten anlegen, X11-Zugang für den Container einrichten
+  "initializeCommand": "sh .devcontainer/host-init.sh",
+
   // USB-Zugriff auf den Drucker (auch wenn er erst nach dem Start eingesteckt wird)
   // und X11-Socket für die Qt-Oberfläche
   "runArgs": [
@@ -9,11 +12,14 @@
   ],
   "mounts": [
     "source=/dev/bus/usb,target=/dev/bus/usb,type=bind",
-    "source=/tmp/.X11-unix,target=/tmp/.X11-unix,type=bind"
+    "source=/tmp/.X11-unix,target=/tmp/.X11-unix,type=bind",
+    "source=${localEnv:HOME}/Etiketten,target=/home/vscode/Etiketten,type=bind",
+    "source=${localEnv:HOME}/.cache/ptlabel-x11,target=/home/vscode/.ptlabel-x11,type=bind"
   ],
   "containerEnv": {
     "DISPLAY": "${localEnv:DISPLAY}",
-    "QT_QPA_PLATFORM": "xcb"
+    "QT_QPA_PLATFORM": "xcb",
+    "XAUTHORITY": "/home/vscode/.ptlabel-x11/xauth"
   },
 
   "postCreateCommand": "pip install --user -e '.[dev]'",
