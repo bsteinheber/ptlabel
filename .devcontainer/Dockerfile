@@ -11,7 +11,7 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && rm -rf /var/lib/apt/lists/*
 
 # ptouch-print aus den Quellen bauen (spricht den Drucker direkt per libusb an)
-RUN git clone --depth 1 https://git.familie-radermacher.ch/linux/ptouch-print.git /tmp/ptouch-print \
+RUN git clone https://git.familie-radermacher.ch/linux/ptouch-print.git /tmp/ptouch-print \
     && cmake -S /tmp/ptouch-print -B /tmp/ptouch-print/build \
     && cmake --build /tmp/ptouch-print/build -j"$(nproc)" \
     && install -m 0755 /tmp/ptouch-print/build/ptouch-print /usr/local/bin/ptouch-print \
