@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Name=Ptouch Editor
+GenericName=Etiketten-Editor
+Comment=Etiketten für den Brother P-touch PT-P750W gestalten und drucken
+Exec=ptouch-editor
+Icon=ptouch-editor
+Terminal=false
+Categories=Office;
+Keywords=Etikett;Etiketten;Label;Brother;P-touch;PT-P750W;Drucker;
+StartupNotify=true
+StartupWMClass=ptouch-editor

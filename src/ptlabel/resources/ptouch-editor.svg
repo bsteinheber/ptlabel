@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3b7bea"/>
+      <stop offset="1" stop-color="#1a56c8"/>
+    </linearGradient>
+    <linearGradient id="tape" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#eef2f8"/>
+    </linearGradient>
+  </defs>
+  <!-- Hintergrund -->
+  <rect x="6" y="6" width="116" height="116" rx="26" fill="url(#bg)"/>
+  <!-- Druckerschlitz, aus dem das Band kommt -->
+  <rect x="14" y="40" width="10" height="48" rx="3" fill="#123c8f"/>
+  <!-- Etikettenband mit leichtem Schatten -->
+  <rect x="21" y="47" width="95" height="40" rx="5" fill="#0d2f73" opacity="0.35"/>
+  <rect x="19" y="43" width="95" height="40" rx="5" fill="url(#tape)"/>
+  <!-- „Text“ auf dem Band -->
+  <rect x="29" y="52" width="44" height="9" rx="2" fill="#1f2937"/>
+  <rect x="29" y="66" width="30" height="7" rx="2" fill="#1f2937"/>
+  <!-- Symbol: kleiner Stern -->
+  <path d="M 87 54 l 3.2 6.6 7.2 1 -5.2 5 1.3 7.2 -6.5 -3.4 -6.5 3.4 1.3 -7.2 -5.2 -5 7.2 -1 z"
+        fill="#1a56c8"/>
+  <!-- Schnittlinie -->
+  <line x1="104" y1="40" x2="104" y2="86" stroke="#ffffff" stroke-width="3"
+        stroke-dasharray="5 4" stroke-linecap="round"/>
+</svg>

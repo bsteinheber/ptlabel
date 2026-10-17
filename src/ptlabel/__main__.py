@@ -7,9 +7,10 @@ import os
 import sys
 from pathlib import Path
 
+from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QApplication, QMainWindow, QStackedWidget
 
-from ptlabel import APP_NAME, storage
+from ptlabel import APP_ID, APP_NAME, storage
 from ptlabel.editor import EditorPage
 from ptlabel.start import StartPage
 
@@ -63,6 +64,10 @@ def main() -> None:
     app = QApplication(sys.argv)
     app.setApplicationName("ptlabel")
     app.setApplicationDisplayName(APP_NAME)
+    # Ordnet das Fenster unter Wayland dem Menüeintrag ptouch-editor.desktop zu
+    app.setDesktopFileName(APP_ID)
+    app.setWindowIcon(QIcon.fromTheme(
+        APP_ID, QIcon(str(Path(__file__).with_name("resources") / f"{APP_ID}.svg"))))
     window = MainWindow()
     window.show()
     sys.exit(app.exec())

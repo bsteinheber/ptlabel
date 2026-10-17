@@ -59,16 +59,26 @@ def _decode_oid(raw: bytes) -> str:
 
 
 def get(host: str, oids: list[str], community: str = "public",
-        timeout: float = 2.0) -> dict[str, bytes | int | None]:
-    """Fragt mehrere OIDs ab. Texte kommen als bytes, Zahlen als int zurück."""
+        timeouts: tuple[float, ...] = (2.0, 3.0, 4.0)) -> dict[str, bytes | int | None]:
+    """Fragt mehrere OIDs ab. Texte kommen als bytes, Zahlen als int zurück.
+
+    UDP-Pakete gehen verloren, z. B. während ein Drucker im WLAN aus dem Stromsparmodus
+    aufwacht; deshalb wird die Anfrage mit wachsender Wartezeit wiederholt.
+    """
     bindings = b"".join(_tlv(0x30, _oid(o) + b"\x05\x00") for o in oids)
     pdu = _tlv(0xA0, _int(1) + _int(0) + _int(0) + _tlv(0x30, bindings))
     message = _tlv(0x30, _int(0) + _tlv(0x04, community.encode()) + pdu)
 
     with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as sock:
-        sock.settimeout(timeout)
-        sock.sendto(message, (host, 161))
-        data = sock.recv(8192)
+        for attempt, timeout in enumerate(timeouts, start=1):
+            sock.settimeout(timeout)
+            sock.sendto(message, (host, 161))
+            try:
+                data = sock.recv(8192)
+                break
+            except TimeoutError:
+                if attempt == len(timeouts):
+                    raise
 
     _, body, _ = _read(data, 0)
     pos = 0

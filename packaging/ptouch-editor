@@ -1,0 +1,9 @@
+#!/bin/sh
+# Startet den Ptouch Editor aus seiner Programmumgebung unter /opt/ptouch-editor.
+# Gezeichnet wird über X11 (unter KDE/GNOME-Wayland per XWayland) – so ist das Programm
+# getestet. Wer es anders möchte, setzt QT_QPA_PLATFORM selbst.
+# RESOURCE_NAME setzt die Fensterklasse, damit das Fenster dem Menüeintrag
+# (StartupWMClass) und dem Icon zugeordnet wird.
+export QT_QPA_PLATFORM="${QT_QPA_PLATFORM:-xcb}"
+export RESOURCE_NAME=ptouch-editor
+exec /opt/ptouch-editor/venv/bin/ptlabel "$@"

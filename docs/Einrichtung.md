@@ -4,16 +4,17 @@ Diese Anleitung beschreibt, wie der Ptouch Editor (Paketname `ptlabel`) auf eine
 eingerichtet wird, um Etiketten auf einem **Brother PT-P750W** zu gestalten und zu drucken –
 per **WLAN** oder **USB**.
 
-Es gibt zwei Wege:
+Es gibt drei Wege:
 
 | Weg | Wofür | Aufwand |
 |---|---|---|
-| **A – Dev Container** (empfohlen) | Entwicklung und Nutzung; alles Nötige (Qt-Bibliotheken, ptouch-print, Python-Pakete) steckt im Container | Docker + VS Code |
-| **B – Direkt installieren** | Nutzung ohne Container | Pakete von Hand installieren |
+| **A – Dev Container** | Entwicklung; alles Nötige (Qt-Bibliotheken, ptouch-print, Python-Pakete) steckt im Container | Docker + VS Code |
+| **B – Direkt installieren** | Nutzung ohne Container, von Hand | Pakete von Hand installieren |
+| **C – Installationspaket** (empfohlen zum Nutzen) | Ubuntu/Kubuntu/Debian: Programm mit Startmenü-Eintrag und Icon | ein `apt install` |
 
 ---
 
-## 1. Drucker vorbereiten (für beide Wege)
+## 1. Drucker vorbereiten (für alle Wege)
 
 1. **Editor-Lite-Modus ausschalten:** Die Editor-Lite-LED am Drucker muss **aus** sein. Ist sie
    an, die Editor-Lite-Taste gedrückt halten, bis sie erlischt. Im Editor-Lite-Modus meldet sich der
@@ -34,7 +35,7 @@ Es gibt zwei Wege:
 
 ---
 
-## 2. Weg A – Dev Container (empfohlen)
+## 2. Weg A – Dev Container (für die Entwicklung)
 
 ### Voraussetzungen auf dem Rechner
 
@@ -115,7 +116,55 @@ sudo usermod -aG plugdev "$USER"     # danach ab- und wieder anmelden
 
 ---
 
-## 4. Im Programm einrichten
+## 4. Weg C – Installationspaket (.deb)
+
+Für Ubuntu, Kubuntu und Debian. Das Paket installiert das Programm nach `/opt/ptouch-editor`,
+legt den Befehl `ptouch-editor` an und trägt **„Ptouch Editor“** mit Icon im Startmenü unter
+**„Büro“** ein.
+
+### Paket bauen
+
+Im Dev Container (Terminal von VS Code), im Projektordner:
+
+```bash
+sh packaging/build-deb.sh
+```
+
+Ergebnis: `dist/ptouch-editor_<Version>_all.deb` – die Datei liegt im Projektordner und ist damit
+auch auf dem Rechner sichtbar.
+
+### Installieren
+
+In einem Terminal **auf dem Rechner**, im Projektordner:
+
+```bash
+sudo apt install ./dist/ptouch-editor_0.1.1_all.deb
+```
+
+Wichtig ist das `./` vor dem Dateinamen, sonst sucht `apt` im Internet nach einem Paket dieses
+Namens. Bei der Installation werden die Python-Pakete (PySide6, ptouch, Pillow, zusammen rund
+300 MB) aus dem Internet geladen – es braucht also eine Internetverbindung. Bricht das ab, nach
+dem Beheben mit `sudo dpkg --configure -a` fortsetzen.
+
+Danach: Startmenü → **Büro → Ptouch Editor**, oder im Terminal `ptouch-editor`.
+
+### Aktualisieren und entfernen
+
+- **Neue Version:** Paket neu bauen und wie oben mit `sudo apt install ./dist/…deb` installieren.
+- **Entfernen:** `sudo apt remove ptouch-editor`. Die Etiketten in `~/Etiketten` bleiben erhalten.
+
+### Hinweise
+
+- Das installierte Programm und die Container-Version nutzen **denselben** Ordner `~/Etiketten`
+  und dieselben Einstellungen.
+- **USB-Druck** braucht zusätzlich ptouch-print auf dem Rechner (siehe Abschnitt 3); per WLAN
+  ist nichts weiter nötig.
+- Das Programm zeichnet über X11, unter KDE/GNOME-Wayland also per XWayland. Wer das native
+  Wayland ausprobieren möchte: `QT_QPA_PLATFORM=wayland ptouch-editor`.
+
+---
+
+## 5. Im Programm einrichten
 
 1. Programm starten, auf der Startseite **„Neues Etikett“** → **„Erstellen“**.
 2. Im Editor links unter **„Drucker“**:
@@ -141,7 +190,7 @@ PTLABEL_DIR=~/Dokumente/Etiketten python -m ptlabel
 
 ---
 
-## 5. Fehlerbehebung
+## 6. Fehlerbehebung
 
 | Meldung / Verhalten | Ursache und Abhilfe |
 |---|---|
@@ -151,11 +200,12 @@ PTLABEL_DIR=~/Dokumente/Etiketten python -m ptlabel
 | „Eingelegt ist 12 mm, das Etikett ist für 9 mm angelegt“ | Band wechseln oder links unter „Druckmedium“ die eingelegte Breite wählen. |
 | USB: `No P-Touch printer found on USB` | Editor-Lite-LED muss aus sein; Kabel prüfen. Im Container muss der Drucker nicht vor dem Start eingesteckt sein. |
 | USB: `permission denied` | udev-Regel anlegen, siehe Abschnitt 3. |
+| Kein Eintrag im Startmenü nach der Installation | Einmal ab- und wieder anmelden oder im Terminal `kbuildsycoca6` (KDE) ausführen. |
 | Sonstiges unerwartetes Verhalten bei Maus/Tastatur | Mit Protokoll starten und die Zeilen `ptlabel.…` auswerten: `PTLABEL_DEBUG=1 python -m ptlabel` |
 
 ---
 
-## 6. Für Entwickler
+## 7. Für Entwickler
 
 ```bash
 pip install --user -e '.[dev]'                  # im Container bereits erledigt

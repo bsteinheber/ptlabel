@@ -7,6 +7,9 @@ Oberfläche in Python/Qt (PySide6). Druck per **WLAN** (Bibliothek
 
 **Einrichtung:** siehe [docs/Einrichtung.md](docs/Einrichtung.md).
 
+**Installationspaket** (Ubuntu/Kubuntu/Debian, mit Startmenü-Eintrag und Icon): im Dev Container
+`sh packaging/build-deb.sh`, dann auf dem Rechner `sudo apt install ./dist/ptouch-editor_0.1.1_all.deb`.
+
 Kurzfassung mit Dev Container: Repository in VS Code öffnen → „Reopen in Container“ → im Terminal
 
 ```bash
@@ -38,6 +41,7 @@ Etiketten liegen als `*.ptl` (JSON) in `~/Etiketten` – im Dev Container ist da
 ```
 .devcontainer/   Dockerfile, devcontainer.json, host-init.sh (ptouch-print, Qt, USB, X11)
 docs/            Einrichtung.md (Anleitung zur Einrichtung)
+packaging/       build-deb.sh, Startmenü-Eintrag, Startbefehl, Paketskripte (.deb)
 src/ptlabel/
   __init__.py    Version, Programmname
   __main__.py    Hauptfenster (Startseite ↔ Editor)
@@ -46,6 +50,7 @@ src/ptlabel/
   document.py    Etikettenmodell (Szene, Text/Bild, Rendern in Druckerpixeln, JSON)
   storage.py     Ablage der Etiketten im Verzeichnis
   symbols.py     Symbolauswahl
+  resources/     Programm-Icon (SVG)
   icons.py       selbst gezeichnete Werkzeugleisten-Symbole
   printer.py     Druck und Medium abfragen per WLAN (ptouch, SNMP) oder USB (ptouch-print)
   snmp.py        minimale SNMP-Abfrage für den Bandstatus im WLAN
