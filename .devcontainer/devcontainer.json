@@ -22,7 +22,9 @@
     "vscode": {
       "extensions": [
         "ms-python.python",
-        "charliermarsh.ruff"
+        "charliermarsh.ruff",
+        "anthropic.claude-code"
+
       ]
     }
   },
